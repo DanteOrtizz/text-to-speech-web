@@ -8,7 +8,7 @@ const closeBtn = document.getElementById('close');
 const data = [
     {
         image: './img/drink.jpeg',
-        text: "I'm thisty"
+        text: "I'm thirsty"
     },
     {
         image: './img/burger.jpeg',
@@ -41,8 +41,68 @@ function createBox(item) {
         <p class="info">${text}</p>
     `;
 
+    box.addEventListener('click', () => {
+        setTextMessage(text);
+        speakText();
+
+        // add active efect
+        box.classList.add('active');
+        setTimeout(() => box.classList.remove('active'), 800);
+    });
+
     // todo - speak event
 
     main.appendChild(box);
 }
 
+// Init speech synth
+const message = new SpeechSynthesisUtterance();
+
+// Populate select voice
+let voices = [];
+
+function getVoices() {
+    voices = speechSynthesis.getVoices();
+
+    voices.forEach(voice => {
+        const option = document.createElement('option');
+
+        option.value = voice.name;
+        option.innerText = `${voice.name} ${voice.lang}`;
+
+        voicesSelect.appendChild(option);
+    });
+}
+
+// Set text
+function setTextMessage(text) {
+    message.text = text;
+}
+
+// speak text
+function speakText() {
+    speechSynthesis.speak(message);
+}
+
+// Set voice
+function setVoice(e) {
+    message.voice = voices.find(voice => voice.name === e.target.value);
+}
+
+// Voice Changed
+speechSynthesis.addEventListener('voiceschanged', getVoices);
+
+// Toggle text box
+toggleBtn.addEventListener('click', () =>
+     document.getElementById('text-box').classList.toggle('show')
+);
+
+// Close btn
+closeBtn.addEventListener('click', () =>
+     document.getElementById('text-box').classList.remove('show')
+);
+
+// Change Voice
+voicesSelect.addEventListener('change', setVoice);
+
+getVoices();
