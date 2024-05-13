@@ -102,7 +102,18 @@ closeBtn.addEventListener('click', () =>
      document.getElementById('text-box').classList.remove('show')
 );
 
+// make voice stop reading when closing the text 
+closeBtn.addEventListener('click', () => {
+    speechSynthesis.cancel();
+});
+
 // Change Voice
 voicesSelect.addEventListener('change', setVoice);
+
+// Read text button
+readBtn.addEventListener('click', () => {
+    setTextMessage(textarea.value);
+    speakText();
+});
 
 getVoices();
